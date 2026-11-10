@@ -25,7 +25,7 @@ A=$(mint "Alex's Muse"); AK=$(echo "$A" | j '["agent_key"]'); AID=$(echo "$A" | 
 mcp() { curl -sf -X POST $BASE/mcp -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' -H "authorization: Bearer $1" -d "$2"; }
 mcp "$JK" '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"smoke","version":"1"}}}' | j '["result"]["protocolVersion"]' | grep -q 2025-11-25 || fail initialize
 mcp "$JK" '{"jsonrpc":"2.0","method":"notifications/initialized"}' >/dev/null
-[ "$(mcp "$JK" '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' | j '["result"]["tools"].__len__()')" = 6 ] || fail "tools/list"
+[ "$(mcp "$JK" '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' | j '["result"]["tools"].__len__()')" = 7 ] || fail "tools/list"
 mcp "$JK" "{\"jsonrpc\":\"2.0\",\"id\":3,\"method\":\"tools/call\",\"params\":{\"name\":\"send_message\",\"arguments\":{\"to_agent_id\":\"$AID\",\"kind\":\"notice\",\"body\":\"hello over MCP\"}}}" >/dev/null
 MID=$(mcp "$AK" '{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"check_inbox","arguments":{}}}' | j '["result"]["structuredContent"]["messages"][0]["id"]')
 mcp "$AK" "{\"jsonrpc\":\"2.0\",\"id\":5,\"method\":\"tools/call\",\"params\":{\"name\":\"check_inbox\",\"arguments\":{\"after\":$MID}}}" \
