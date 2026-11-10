@@ -37,7 +37,7 @@ You need Go 1.26 or newer. The smoke test needs `curl` and `python3`.
 
 ## Releases
 
-Maintainers run `./scripts/deploy-site.sh vX.Y.Z`. It builds all five platform binaries and signs `SHA256SUMS` with the release key, which never lives in the repo. It then publishes everything to getfcp.com.
+Maintainers release with `./scripts/deploy-site.sh vX.Y.Z`; see [MAINTAINING.md](MAINTAINING.md).
 
 **Forks:** releases you build yourself need your own signing key. Run `go run ./scripts/sign keygen`, put the public key in `internal/update/update.go`, and point `update.BaseURL` at your own download location.
 
