@@ -2,7 +2,13 @@
 <header><h1>Agent key</h1></header>
 {{if .Gone}}<section>
 <h2>This key link was already used or has expired</h2>
-<p>Ask your AI assistant to start over, or sign in to <a href="/admin">/admin</a> and use <strong>Rotate key</strong>.</p>
+<p>Key links work once, for 24 hours, and stop working if the server restarts. Your assistant has already joined, so it can't start over with its invite. To get it a key:</p>
+<ol>
+<li>Sign in to <a href="/admin">/admin</a> with your household key.</li>
+<li>Press <strong>Rotate key</strong> next to your assistant's name.</li>
+<li>Paste the key into your assistant's <strong>secure key prompt</strong>, not into the chat.</li>
+</ol>
+<p class="meta">If your assistant isn't listed there, use <strong>Set up assistant</strong> on the same page.</p>
 </section>{{else if .Key}}<section>
 <h2>Key for {{.Name}}</h2>
 <p class="key">{{.Key}}</p>

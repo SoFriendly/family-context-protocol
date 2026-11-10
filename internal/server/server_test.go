@@ -424,8 +424,9 @@ func TestJoinFlow(t *testing.T) {
 	}
 	e.do("GET", "/v1/inbox", j1.Key, nil, 401, nil)
 	j1.Key = retry.Key
-	if code, _ := get(path); code != 410 {
-		t.Fatalf("used invite GET: %d", code)
+	// A spent invite explains how to recover a join that got stuck.
+	if code, body := get(path); code != 410 || !strings.Contains(body, "Rotate key") || !strings.Contains(body, e.url+"/admin") {
+		t.Fatalf("used invite GET: %d %s", code, body)
 	}
 
 	var j2 map[string]any

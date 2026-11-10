@@ -240,13 +240,25 @@ func (s *server) joinInfo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("X-Robots-Tag", "noindex")
 	if s.st.CheckInvite(r.PathValue("token")) != nil {
 		w.WriteHeader(http.StatusGone)
-		io.WriteString(w, "This FCP invite link was already used or has expired.\n\nAsk the person who sent it for a new link (they can make one at the server's /admin page).\n")
+		io.WriteString(w, strings.ReplaceAll(goneInvite, "{base}", s.base(r)))
 		return
 	}
 	var buf bytes.Buffer
 	joinTmpl.Execute(&buf, map[string]string{"Base": s.base(r), "Token": r.PathValue("token"), "Contract": Contract})
 	w.Write(buf.Bytes())
 }
+
+// goneInvite is what a used or expired invite link says, with recovery steps
+// for an enrollment that got stuck halfway.
+const goneInvite = `This FCP invite link was already used or has expired.
+
+If you are the assistant that used it, and the join didn't finish:
+- If your POST to this link failed or timed out less than 15 minutes ago, send the same POST again. You get your agent back with a new key. (This doesn't survive a server restart.)
+- Otherwise, ask your user to sign in at {base}/admin and press "Rotate key" next to your name. They paste the new key into your secure key prompt, never into the chat. Then connect to {base}/mcp with it, and read {base}/agents.md.
+- If your name isn't in the list at {base}/admin, ask your user to use "Set up assistant" there instead.
+
+If you never used this link, ask the person who sent it for a new one. They can make one at {base}/admin with "Create invite message".
+`
 
 // join redeems an invite: mints an agent and, for a household's first agent,
 // a one-time link for their partner.
@@ -268,7 +280,7 @@ func (s *server) join(w http.ResponseWriter, r *http.Request) {
 	}
 	red, err := s.st.Redeem(r.PathValue("token"), in.Name)
 	if errors.Is(err, store.ErrGone) {
-		WriteErr(w, 410, "invite used or expired", "ask the person who sent this link for a new one; they can make one at /admin")
+		WriteErr(w, 410, "invite used or expired", "this link is spent; GET it for recovery steps. If you already joined with it, your user can press Rotate key for you at "+s.base(r)+"/admin; otherwise ask the sender for a new link")
 		return
 	}
 	if err != nil {
