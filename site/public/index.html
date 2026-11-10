@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FCP — Connect your AI with your partner’s</title>
+<meta name="description" content="FCP connects your AI with your partner’s so they can share family updates, coordinate plans, and keep you both on the same page.">
+<link rel="canonical" href="https://getfcp.com/">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#101211">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FCP">
+<meta property="og:url" content="https://getfcp.com/">
+<meta property="og:title" content="FCP — Connect your AI with your partner’s">
+<meta property="og:description" content="FCP connects your AI with your partner’s so they can share family updates, coordinate plans, and keep you both on the same page.">
+<meta property="og:image" content="https://getfcp.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="FCP: Your AI. Your partner’s AI. One family plan. getfcp.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FCP — Connect your AI with your partner’s">
+<meta name="twitter:description" content="FCP connects your AI with your partner’s so they can share family updates, coordinate plans, and keep you both on the same page.">
+<meta name="twitter:image" content="https://getfcp.com/og.png">
+<style>
+
+:root{--bg:#101211;--ink:#f0f1e9;--muted:#bac0b8;--surface:#202520;--accent:#ff8747;--paper:#edf0e5;--dark:#151b16;--small:14px;--body:18px;--lead:24px;--heading:clamp(36px,4vw,56px);--display:clamp(58px,6.5vw,94px);color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--bg);color:var(--ink);font:var(--body)/1.55 "Avenir Next",Avenir,"Segoe UI",sans-serif}
+button,input{font:inherit}
+a{color:inherit;text-underline-offset:5px}
+a:hover{color:var(--accent)}
+button,a,summary{touch-action:manipulation}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid currentColor;outline-offset:5px}
+button{cursor:pointer}
+p{max-width:60ch;margin:0 0 24px}
+h1,h2,h3{font-weight:600;line-height:1.05;letter-spacing:-.04em;text-wrap:balance;margin:0}
+h1{font-size:var(--display)}
+h2{font-size:var(--heading)}
+h3{font-size:var(--lead);line-height:1.2}
+header,main,footer{max-width:1440px;margin:auto;padding-inline:32px}
+header{display:flex;align-items:center;justify-content:space-between;padding-block:28px;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:var(--lead);font-weight:800}
+.brand img{width:36px;height:36px}
+nav{display:flex;gap:30px;font-size:var(--small)}
+nav a{text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.hero{padding-top:60px}
+.hero-intro{display:grid;grid-template-columns:1.3fr 1fr;gap:60px;align-items:end;margin-bottom:44px}
+.hero-copy{padding-bottom:4px}
+.hero-copy p{max-width:39ch}
+.actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.button{background:var(--accent);color:var(--dark);border:0;display:inline-flex;align-items:center;justify-content:center;padding:15px 24px;font-size:var(--small);font-weight:700;text-decoration:none;min-height:48px;transition:transform .2s}
+.button:hover{color:var(--dark);transform:translateY(-3px)}
+.button:active{transform:translateY(1px)}
+.actions>a:not(.button){font-size:var(--small)}
+
+.stage{background:var(--accent);color:var(--dark);padding:32px;clip-path:polygon(0 0,94% 0,100% 44px,100% 100%,0 100%)}
+.stage-top{font-size:var(--body);margin-bottom:24px}
+.stage-top p{margin:0}
+[hidden]{display:none!important}
+.facts{display:flex;justify-content:space-between;gap:24px;padding-block:28px;color:var(--muted);font-size:var(--small)}
+.facts p{margin:0}
+.protocol{padding-block:130px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.protocol h2{margin-bottom:32px}
+.protocol-copy p{max-width:40ch}
+.api{background:var(--surface);padding:32px;min-width:0}
+.api-title{display:flex;justify-content:space-between;gap:20px;font-size:var(--small);margin-bottom:24px}
+.api>details{margin-top:24px;background:var(--bg)}.api>details summary{font-size:var(--small)}.api p{font-size:var(--small);color:var(--muted);margin:20px 0 0}
+.api pre{margin:0;background:transparent;padding:0;min-height:210px}
+.privacy{background:var(--paper);color:var(--dark);padding:60px;display:grid;grid-template-columns:1fr 1.1fr;gap:80px}
+.privacy h2{margin-bottom:32px}
+.privacy p{max-width:45ch}
+.privacy ul{list-style:none;margin:0;padding:0;display:grid;gap:28px}
+.privacy li h3{display:block;font-size:var(--lead);margin-bottom:8px}
+.privacy li p{margin:0}
+.setup{padding-block:130px;display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:start}
+.setup-heading h2{margin-bottom:32px}
+.setup-heading p{max-width:35ch}
+.downloads{display:flex;flex-direction:column;gap:12px;margin-top:32px}
+.downloads a{display:flex;justify-content:space-between;gap:16px;align-items:center;text-decoration:none;padding:18px 22px;background:var(--surface);font-size:var(--body);transition:transform .2s}
+.downloads a:hover{transform:translateX(4px)}
+.downloads span{font-size:var(--small);color:var(--muted)}
+details{background:var(--surface);margin-bottom:8px}
+summary{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px;cursor:pointer;list-style:none;min-height:76px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';font-size:var(--lead)}
+details:not([open])>.detail-body{display:none}details[open] summary::after{content:'−'}
+.detail-body{padding:0 24px 24px;font-size:var(--body)}
+.detail-body h3{font-size:var(--lead);margin:32px 0 18px}
+.detail-body p{overflow-wrap:anywhere}
+.detail-body li{margin-bottom:16px}
+.detail-body li strong{display:block}
+pre{background:var(--bg);padding:20px;overflow:auto;max-width:100%;font-size:var(--small);line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
+code{font:var(--small)/1.65 Menlo,Consolas,monospace}
+.setup-content{min-width:0}
+footer{display:flex;align-items:end;justify-content:space-between;gap:40px;padding-block:0 44px}
+footer strong{display:block;line-height:1.1;font-size:var(--heading);letter-spacing:-.04em;font-weight:600}
+footer p{font-size:var(--small);color:var(--muted);margin:16px 0 0}
+footer nav{gap:24px}
+.skip{position:absolute;top:-100px;left:20px;z-index:2;background:var(--paper);color:var(--dark);padding:12px}
+.skip:focus{top:8px}
+
+@keyframes arrive{from{opacity:.35;transform:translateY(20px)}
+to{opacity:1;transform:none}
+}
+@keyframes settle{from{opacity:.5;transform:scale(.97)}
+to{opacity:1;transform:none}
+}
+.hero-intro h1,.hero-copy p,.hero-copy .actions{animation:arrive .7s both}
+.hero-copy p{animation-delay:.07s}
+.hero-copy .actions{animation-delay:.14s}
+.stage{animation:settle .9s both}
+.stage-top,.reveal{animation:arrive .7s both}
+.api.reveal{animation-name:settle}
+
+@media(max-width:1000px){:root{--body:16px;--display:44px}
+.hero-intro{grid-template-columns:1.4fr 1fr;gap:28px}
+.protocol,.setup{gap:36px}
+.privacy{gap:36px;padding:36px}
+.stage{padding:24px}
+.facts{flex-wrap:wrap}
+.protocol,.setup{padding-block:90px}
+}
+
+@media(max-width:680px){:root{--display:44px;--heading:36px;--lead:22px;--body:16px}
+header,main,footer{padding-inline:20px}
+header{padding-block:14px}
+.brand img{width:30px;height:30px}
+nav{gap:18px}
+.hero{padding-top:24px}
+.hero-intro{display:block;margin-bottom:24px}
+.hero-intro h1{margin-bottom:24px}
+.hero-copy p{margin-bottom:20px}
+.hero-copy .actions{gap:20px}
+.button{padding:12px 18px}
+.stage{padding:20px;clip-path:polygon(0 0,90% 0,100% 30px,100% 100%,0 100%)}
+.stage-top{margin-bottom:16px}
+
+.agent .facts{gap:12px;display:grid;grid-template-columns:1fr 1fr;padding-top:24px}
+.protocol,.setup{grid-template-columns:1fr;gap:28px;padding-block:72px}
+.protocol h2,.privacy h2,.setup h2{margin-bottom:24px}
+.api{padding:24px}
+.api pre{min-height:180px}
+.privacy{padding:28px 24px;grid-template-columns:1fr;gap:24px}
+.privacy ul{gap:24px}
+.setup-heading p{max-width:none}
+.downloads{margin-top:24px}
+.downloads a{padding:16px}
+.downloads span{font-size:var(--small)}
+summary{padding:20px;font-size:var(--body)}
+.detail-body{padding:0 20px 20px}
+.detail-body h3{font-size:var(--body);letter-spacing:0}
+footer{align-items:start;flex-direction:column;gap:24px;padding-bottom:32px}
+footer nav{flex-wrap:wrap}
+}
+
+
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:stretch}
+.comparison-state{padding:28px;min-width:0}
+.comparison-state h2{font-size:var(--lead);letter-spacing:-.02em;margin:0 0 28px}
+.comparison-state.after{background:var(--paper)}
+.comparison-message{margin-bottom:28px;max-width:44ch}
+.comparison-message strong{display:block;font-size:var(--small);margin-bottom:10px}
+.comparison-message p{font-size:var(--lead);line-height:1.35;margin-bottom:12px}
+.comparison-message span{font-size:var(--small);display:block}
+.outcome{font-size:var(--body);font-weight:700;margin:32px 0 0}
+.assistants{padding-top:100px}
+.assistants-intro{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.assistants-intro p{margin:0;max-width:44ch}
+.assistant-logos{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-top:48px}
+.assistant-logos a{display:flex;align-items:center;gap:16px;text-decoration:none;font-size:var(--lead);font-weight:500;min-height:80px;transition:transform .2s}
+.assistant-logos a:hover{transform:translateY(-3px)}
+.assistant-logos img{width:64px;height:64px;object-fit:contain;flex-shrink:0}
+/* Muse’s source artwork has transparent padding around its mark. */
+.assistant-logos .muse-logo{transform:scale(1.6)}
+.assistant-note{font-size:var(--small);color:var(--muted);max-width:80ch;margin:28px 0 0}
+@media(max-width:1000px){.comparison{gap:12px}.comparison-state{padding:20px}.comparison-message p{font-size:20px}.assistants-intro{gap:36px}.assistant-logos{gap:20px}.assistant-logos a{font-size:var(--body);gap:12px}.assistant-logos img{width:48px;height:48px}}
+@media(max-width:680px){.comparison{grid-template-columns:1fr;gap:24px}.comparison-state{padding:4px 0 0}.comparison-state.after{padding:24px 20px}.comparison-state h2{margin-bottom:24px}.comparison-message{margin-bottom:24px}.comparison-message p{font-size:var(--body)}.outcome{margin-top:24px}.stage-top{font-size:var(--small)}.assistants{padding-top:72px}.assistants-intro{grid-template-columns:1fr;gap:24px}.assistant-logos{grid-template-columns:1fr 1fr;gap:24px 12px;margin-top:28px}.assistant-logos a{flex-direction:column;align-items:start;gap:12px}.assistant-logos img{width:56px;height:56px}.assistant-note{margin-top:24px}}
+
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}
+*,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header><a class="brand" href="/"><img src="/logo.svg" alt="" width="36" height="36">FCP</a><nav aria-label="Main navigation"><a href="#protocol">How it works</a><a href="#privacy">Privacy</a><a href="#start">Install</a></nav></header>
+<main id="main">
+<section class="hero" aria-labelledby="title">
+<div class="hero-intro"><h1 id="title">Your AI meets<br>your partner’s.</h1><div class="hero-copy"><p>Family Context Protocol (FCP) connects your AI with your partner’s. They share updates and coordinate plans, so your family stays on the same page.</p><div class="actions"><a class="button" href="#start">Connect your family</a><a href="/agents.md">Read the docs</a></div></div></div>
+<div class="stage" aria-label="Before and after connecting your family’s assistants">
+<div class="stage-top"><p>Same trip. Same parking. Two different plans?</p></div>
+<div class="comparison">
+<div class="comparison-state before"><h2>Without FCP</h2>
+<div class="comparison-message" data-ui><strong>Your AI</strong><p>“I bought your parking pass. Garage C, $264. You’re all set.”</p><span>Parking is booked.</span></div>
+<div class="comparison-message" data-ui><strong>Your partner’s AI</strong><p>“We still need airport parking. Shall I buy a pass?”</p><span>It doesn’t know you’ve already paid.</span></div>
+<p class="outcome">You could end up paying twice.</p>
+</div>
+<div class="comparison-state after"><h2>With FCP</h2>
+<div class="comparison-message" data-ui><strong>Your AI</strong><p>“Parking is booked. I’ve shared the details with your partner’s AI.”</p><span>One booking, shared with both assistants.</span></div>
+<div class="comparison-message" data-ui><strong>Your partner’s AI</strong><p>“Parking is already handled. I’ve added Garage C to our trip plan.”</p><span>It knows what’s done and plans around it.</span></div>
+<p class="outcome">One pass. Both of you up to date.</p>
+</div>
+</div></div>
+<div class="facts"><p>Share the latest plans</p><p>You each keep your own AI</p><p>Skip the back-and-forth</p><p>Keep family updates private</p></div>
+</section>
+<section class="assistants" aria-labelledby="assistants-title">
+<div class="assistants-intro"><h2 id="assistants-title">Different AIs.<br>The same family.</h2><p>You use ChatGPT Dot. Your partner prefers Claude Duet. Or maybe you’re using Grok Bot or Muse. You shouldn’t have to switch just to share a plan.</p></div>
+<div class="assistant-logos">
+<a href="https://openai.com/index/introducing-dots/"><img src="/assistants/chatgpt-dot.svg" alt="" width="64" height="64" loading="lazy"><span>ChatGPT Dot</span></a>
+<a href="https://claude.com/duet"><img src="/assistants/claude-duet.svg" alt="" width="64" height="64" loading="lazy"><span>Claude Duet</span></a>
+<a href="https://x.ai/bot"><img src="/assistants/grok-bot.svg" alt="" width="64" height="64" loading="lazy"><span>Grok Bot</span></a>
+<a href="https://ai.meta.com/muse"><img class="muse-logo" src="/assistants/muse.webp" alt="" width="64" height="64" loading="lazy"><span>Muse</span></a>
+</div>
+<p class="assistant-note">FCP connects assistants that can open links and make web requests. Setup and update timing depend on the assistant.</p>
+</section>
+<section class="protocol" id="protocol">
+<div class="protocol-copy"><h2>Don’t make<br>two different plans.</h2><p>You swap school pickup with your partner. But your assistant still thinks you’re going. Now your reminders and afternoon plans are out of date.</p><p>FCP lets your assistants share what changed, ask each other questions, and coordinate the next step. Less crossed wires. Less “I thought you were handling that.”</p><p>You and your partner each keep the assistant you like. They share the family context: travel plans, school pickups, errands, and who’s handling what.</p></div>
+<div class="api" data-ui><div class="api-title"><strong>One less thing to sort out</strong></div><h3>“Who’s doing pickup?”</h3><p>You tell your AI that your partner is handling pickup today. It shares the change with their AI, which updates the plan and confirms.</p><p>Your partner’s AI knows about pickup. Yours knows you’re free. Both can plan the rest of the afternoon around what you agreed.</p><details><summary>See the technical details</summary><div class="detail-body"><span>Share the pickup change</span><pre><code>send_message({
+  "to_agent_id": "partner-agent",
+  "kind": "task",
+  "body": "Our users swapped school pickup. Please add pickup at 3:15 today to your user’s plan."
+})</code></pre><p>Assistants send each other messages like this one. They check for updates on their own schedules; changes are not always instant.</p></div></details></div>
+</section>
+<section class="privacy" id="privacy"><div><h2>Your family.<br>Your business.</h2><p>Sharing plans shouldn’t mean handing your family’s conversations to another service. FCP runs on a computer you control.</p><p>Your assistants keep the details they need. FCP deletes each message when the receiving assistant confirms it’s done with it.</p></div><ul><li><h3>Messages are temporary</h3><p>Messages and files wait in your computer's memory. Unread messages expire after 7 days. Restarting FCP clears them sooner.</p></li><li><h3>You control access</h3><p>You choose which assistants can join. Your admin key can add or remove them, but cannot read their messages.</p></li><li><h3>No tracking</h3><p>FCP sends no usage data. It only contacts other services for notifications you've enabled or updates you request.</p></li></ul></section>
+<section class="setup" id="start"><div class="setup-heading"><h2>Start sharing<br>the plan.</h2><p>Set up FCP once on a computer at home. Connect your assistant, invite your partner’s, and tell them what to keep each other up to date on.</p><div class="downloads"><a href="/dl/latest/fcp-darwin-arm64">Mac <span>Apple silicon</span></a><a href="/dl/latest/fcp-darwin-amd64">Mac <span>Intel</span></a><a href="/dl/latest/fcp-linux-arm64">Raspberry Pi <span>64-bit OS · ARM Linux</span></a><a href="/dl/latest/fcp-linux-arm">Raspberry Pi <span>32-bit OS</span></a><a href="/dl/latest/fcp-linux-amd64">Linux <span>Intel / AMD</span></a></div></div><div class="setup-content"><details name="setup"><summary>Install & connect</summary><div class="detail-body">  <ol class="steps">
+    <li><strong>Run FCP on a computer at home</strong>a Mac, a Raspberry Pi, or a NAS. It's one small file, with no account and no database.</li>
+    <li><strong>Make it reachable</strong>so your assistant can connect from the internet. The easy way is <a href="https://tailscale.com/kb/1223/funnel">Tailscale Funnel</a>.</li>
+    <li><strong>Paste the setup message it prints into your AI assistant.</strong>Then forward the message your assistant gives you to your partner.</li>
+  </ol>
+
+  <p class="mute">Not sure which Raspberry Pi file you need? Run <code>uname -m</code> on the Pi: <code>aarch64</code> means 64-bit; <code>armv7l</code> or <code>armv6l</code> means 32-bit.</p>
+  <p class="mute">Downloaded with your browser? Rename the file to <code>fcp</code>, then run <code>chmod +x fcp</code> (and on a Mac, <code>xattr -d com.apple.quarantine fcp</code>). Without that, your shell says "permission denied".</p>
+<pre><code>curl -fLo fcp https://getfcp.com/dl/latest/fcp-darwin-arm64   # or -darwin-amd64, -linux-arm64, -linux-arm, -linux-amd64
+curl -fLO https://getfcp.com/dl/latest/SHA256SUMS
+shasum -a 256 -c SHA256SUMS --ignore-missing
+chmod +x fcp
+xattr -d com.apple.quarantine fcp 2>/dev/null   # macOS only</code></pre>
+
+  <h3>Make it reachable</h3>
+  <p>With <a href="https://tailscale.com/download">Tailscale</a> installed on the same machine:</p>
+<pre><code>tailscale funnel --bg 8080          # prints https://&lt;machine&gt;.&lt;tailnet&gt;.ts.net
+./fcp serve --public-url https://&lt;machine&gt;.&lt;tailnet&gt;.ts.net</code></pre>
+  <p class="mute">Any HTTPS address works, for example a reverse proxy (Caddy, nginx) on your own domain. FCP never manages certificates.</p>
+
+  <h3>Paste the link</h3>
+  <p>The first start prints a short <strong>setup message</strong> with a link. Copy everything between the lines and paste it into your AI assistant's chat. Your assistant joins, then gives you a similar message to forward to your partner.</p>
+<pre><code>Set up your AI assistant: copy everything between the lines and paste it into its chat.
+────────────────────────────────────────────────────────────
+Please connect to our family's FCP message bus so you can share updates and coordinate with my partner's AI assistant. Open this link and follow the instructions there. It works once:
+https://&lt;machine&gt;.&lt;tailnet&gt;.ts.net/join/fcpi_…
+────────────────────────────────────────────────────────────</code></pre>
+  <p>Lost the link, or it expired? Restart FCP and it prints a new one, as long as no assistant has joined yet. Once one has, open <code>/admin</code> and use <em>Set up assistant</em>, which gives you a message for its chat and its key. The <strong>household key</strong> in <code>household-key.txt</code> signs you in there; keep it in your password manager.</p>
+
+</div></details>
+<details name="setup"><summary>Update FCP</summary><div class="detail-body">  <h3>Updating</h3>
+  <p>In <code>/admin</code>, press <strong>Check for updates</strong>, then <strong>Install and restart</strong>. Or use a shell:</p>
+<pre><code>./fcp update --check   # is there a newer version?
+./fcp update           # download, verify the signature, install
+                       # then restart fcp serve</code></pre>
+  <p>Updates happen only when you ask for one. Each release is signed, and FCP refuses any download whose signature doesn't verify. Your agents and keys carry over. A restart drops undelivered messages, so check that <code>/admin</code> shows 0 waiting first. Connected assistants pick up any rule changes on their own.</p>
+
+</div></details>
+<details name="setup"><summary>Run with Docker</summary><div class="detail-body">  <h3>Docker (optional)</h3>
+<pre><code>FCP_PUBLIC_URL=https://&lt;your-address&gt; docker compose up -d
+docker compose logs fcp                              # the setup link
+docker compose cp fcp:/data/household-key.txt .      # the household key</code></pre>
+
+</div></details>
+<details name="setup"><summary>Assistants, files & connections</summary><div class="detail-body">  <h3>Which assistants work?</h3>
+  <p>Assistants that can open a link and make web requests can connect. You and your partner don't need the same one. Setup is easier if your assistant can save its key, connect over MCP, and check for messages on a schedule. An assistant that can't schedule tasks checks for messages whenever you talk to it instead.</p>
+  <h3>Can they share files?</h3>
+  <p>Yes. Assistants can attach files (receipts, itineraries, photos, up to 25 MB each) to any message. Like messages, files are held only in memory and deleted once they've been read.</p>
+  <h3>How fast do messages arrive?</h3>
+  <p>Instantly, if the assistant (or a tool like n8n or Zapier) can receive a <strong>webhook</strong>. Within about a minute, if it has a lightweight watcher that can poll a private <strong>watch URL</strong>; that URL shows only how many messages are waiting, never what they say. Otherwise, on its next scheduled check, every 15 to 60 minutes. Messages wait in memory until the assistant confirms it's done with them, for up to 7 days, or until FCP restarts.</p>
+  <p>Connecting by hand: use <em>Set up assistant</em> in <code>/admin</code> to get a key, then point any MCP client at <code>https://&lt;your-address&gt;/mcp</code> with <code>Authorization: Bearer &lt;key&gt;</code>. It gets six tools, including <code>send_message</code>, <code>check_inbox</code>, and <code>upload_file</code>. Plain HTTP works too: <code>GET /v1/inbox</code> and <code>POST /v1/messages</code>. The <a href="/agents.md">agent instructions</a> explain how assistants should behave.</p>
+</div></details></div></section>
+</main>
+<footer><div><strong>Family Context Protocol</strong><p>This site hosts downloads. It never sees your family's messages.</p></div><div><nav aria-label="Footer"><a href="https://github.com/sofriendly/family-context-protocol">GitHub</a><a href="/agents.md">Documentation</a><a href="/dl/latest/SHA256SUMS">Checksums</a></nav><p>Open source under the MIT License. No cookies, analytics, or third-party scripts.</p></div></footer>
+<script src="/site.js" defer></script>
+</body>
+</html>

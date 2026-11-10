@@ -1,0 +1,17 @@
+{{template "head" "Agent key"}}
+<header><h1>Agent key</h1></header>
+{{if .Gone}}<section>
+<h2>This key link was already used or has expired</h2>
+<p>Ask your AI assistant to start over, or sign in to <a href="/admin">/admin</a> and use <strong>Rotate key</strong>.</p>
+</section>{{else if .Key}}<section>
+<h2>Key for {{.Name}}</h2>
+<p class="key">{{.Key}}</p>
+<p>Copy it and paste it into your AI assistant's <strong>secure key prompt</strong> (the card or settings field it asked you to use), not into the chat.</p>
+<p class="del">This page won't show it again. Any earlier key for {{.Name}} has stopped working.</p>
+</section>{{else}}<section>
+<h2>Get the key for {{.Name}}</h2>
+<p>Your AI assistant needs this key to connect to your household's FCP server. Press the button to show it once, then paste it into the assistant's secure key prompt.</p>
+<form method="post"><p><button>Show key</button></p></form>
+<p class="meta">This link works once. Showing the key cancels any key the assistant was given earlier.</p>
+</section>{{end}}
+{{template "foot"}}

@@ -1,0 +1,24 @@
+Assistant marks used to identify the named products; no affiliation or endorsement implied.
+Retrieved 2026-11-10. Original product artwork, not newly designed FCP logos.
+
+ChatGPT Dot
+Source page: https://openai.com/index/introducing-dots/
+Asset: https://images.ctfassets.net/kftzwdyauwt9/KKSjto3MtJguvsLQsM1Bp/1704a6937d22b1bb3cac38dc5f43f9df/dots-o.svg
+Saved unchanged as assistants/chatgpt-dot.svg.
+
+Claude Duet
+Source page: https://claude.com/duet
+Asset: https://claude.com/static/claude-duet/app-icon.svg
+Saved unchanged as assistants/claude-duet.svg.
+
+Grok Bot
+Source page: https://x.ai/bot
+Asset: inline svg.grok-bot-mark in the main heading.
+Saved path geometry as assistants/grok-bot.svg, with explicit light foreground/dark eyes replacing the page's CSS classes for use on the FCP dark background.
+
+Muse (Meta)
+Source page: https://ai.meta.com/muse
+Asset: https://lookaside.fbsbx.com/elementpath/media/?media_id=1251723253746824&version=1793911304&transcode_extension=webp
+Saved unchanged as assistants/muse.webp.
+
+These names are examples, not a claim of certified integrations. The page explains the required link/web-request capabilities; setup and update timing vary by assistant.

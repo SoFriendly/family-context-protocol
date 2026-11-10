@@ -1,0 +1,16 @@
+services:
+  fcp:
+    build: .
+    image: fcp:latest
+    restart: unless-stopped
+    # Published on localhost only. Reach it from other devices via Tailscale or
+    # a reverse proxy (see README), or change to "8080:8080" on a trusted LAN.
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      FCP_PUBLIC_URL: ${FCP_PUBLIC_URL:-}
+      FCP_ADMIN_TOKEN: ${FCP_ADMIN_TOKEN:-}
+    volumes:
+      - fcp-data:/data
+volumes:
+  fcp-data:

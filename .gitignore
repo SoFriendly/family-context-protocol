@@ -1,0 +1,11 @@
+/fcp
+/dist/
+fcp-keys.json
+household-key.txt
+site/public/dl/
+site/public/_redirects
+site/public/agents.md
+.wrangler/
+.taste-skill/
+
+.firecrawl/

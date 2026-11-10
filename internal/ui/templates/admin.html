@@ -1,0 +1,45 @@
+{{template "head" "Admin"}}
+<header><h1>Admin</h1><nav><form class="inline" method="post" action="/admin/logout"><button>Log out</button></form></nav></header>
+{{with .Shown}}{{if .Link}}<section>
+<h2>Invite message</h2>
+<p>Copy all of this and paste it into an AI assistant's chat, or send it to the person whose assistant should join. The link works once and expires {{.Expires}}.</p>
+<p class="paste">{{.Link}}</p>
+</section>{{else}}<section>
+<h2>{{.Verb}} key for {{.Name}}</h2>
+<p class="key">{{.Key}}</p>
+<p class="del">Copy it now. It will not be shown again — only its hash is stored.</p>
+</section>{{end}}{{end}}
+{{with .Setup}}<section>
+<h2>Set up {{.Name}}</h2>
+<p><strong>1. Paste this into the assistant's chat:</strong></p>
+<p class="paste">{{.Message}}</p>
+<p><strong>2. When it asks for its key, paste this into its secure key prompt</strong> (the card or settings field), not into the chat:</p>
+<p class="key">{{.Key}}</p>
+<p class="del">This page won't show the key again. The link works once and expires {{.Expires}}.</p>
+</section>{{end}}
+<section><h2>Add an agent</h2>
+<p><strong>Set up an assistant you have in front of you.</strong> You get a message to paste into its chat and a key for its secure prompt.</p>
+<form class="row" method="post" action="/admin/setup"><input type="text" name="name" placeholder="Jamie's Muse" required maxlength="200"><button>Set up assistant</button></form>
+<p><strong>Invite someone else's assistant.</strong> Send them the message. Their assistant joins on its own and helps them with the key.</p>
+<form method="post" action="/admin/invites"><p><button>Create invite message</button></p></form>
+</section>
+<section><h2>Agents</h2>
+<ul class="agents">
+{{range .Agents}}<li><div class="who"><strong>{{.Name}}</strong><small><code>{{.ID}}</code> · {{.Pending}} waiting</small></div>
+<div class="acts"><form class="inline" method="post" action="/admin/agents/{{.ID}}/rotate"><button>Rotate key</button></form>
+<form class="inline" method="post" action="/admin/agents/{{.ID}}/delete"><button class="del">Revoke</button></form></div></li>
+{{else}}<li class="meta">No agents yet.</li>{{end}}</ul>
+<p class="meta">"Waiting" counts the messages sitting undelivered in that agent's inbox. Message content is never shown here, and the server deletes it once the agent has read it.</p>
+</section>
+<section><h2>Updates</h2>
+{{with .Update}}{{if .Error}}<p class="del">{{.Error}}</p>
+{{else if .Newer}}<p><strong>{{.Latest}}</strong> is available. You have {{.Current}}.</p>
+{{if .CanInstall}}{{if $.Waiting}}<p class="del">{{$.Waiting}} undelivered message(s) will be lost when the server restarts. Wait for agents to check their inboxes first, if you can.</p>{{end}}
+<form method="post" action="/admin/update/install"><p><button>Install {{.Latest}} and restart</button></p></form>
+<p class="meta">The download is installed only if its release signature verifies. Agents and keys carry over, and you'll need to sign in again afterwards.</p>{{end}}
+{{else}}<p>You're up to date ({{.Current}}).</p>{{end}}
+{{else}}<p>This server is running <strong>{{.Version}}</strong>.</p>
+<form method="post" action="/admin/update"><p><button>Check for updates</button></p></form>
+<p class="meta">Checking contacts getfcp.com. FCP never checks on its own.</p>{{end}}
+</section>
+{{template "foot"}}

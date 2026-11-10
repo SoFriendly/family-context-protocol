@@ -1,0 +1,19 @@
+// getfcp.com: the static landing page and binary downloads.
+// Deploy with ../scripts/deploy-site.sh (it builds the binaries first).
+{
+  "$schema": "https://unpkg.com/wrangler/config-schema.json",
+  "name": "getfcp",
+  "main": "worker.js",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "getfcp.com", "custom_domain": true },
+    { "pattern": "www.getfcp.com", "custom_domain": true }
+  ],
+  "workers_dev": false
+}

@@ -1,0 +1,11 @@
+{{template "head" "Admin login"}}
+<header><h1>Admin</h1></header>
+<section><form class="stack" method="post" action="/admin/login">
+<input type="text" name="username" autocomplete="username" value="FCP household ({{.Host}})" readonly tabindex="-1" aria-hidden="true" class="sr-only">
+<label for="key">Household key (<code>fcph_…</code>)</label>
+<input type="password" id="key" name="key" autocomplete="current-password" required>
+<button>Sign in</button>
+{{with .Error}}<p class="del">{{.}}</p>{{end}}
+<p class="meta">The key was printed once on first run and written to <code>household-key.txt</code> next to the keys file. Your browser or password manager can save it here.</p>
+</form></section>
+{{template "foot"}}
