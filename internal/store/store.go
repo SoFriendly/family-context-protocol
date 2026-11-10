@@ -649,10 +649,22 @@ func (s *Store) Watch(token string) (waiting int, newest int64, err error) {
 
 // ---- messages ----
 
-// Send delivers a message to one agent's inbox, or to every other agent's when
-// to is nil, with optional attachments (file ids the sender uploaded). It
-// returns the message and who it was delivered to.
-func (s *Store) Send(from *Agent, to *string, kind, body string, re *int64, attachments ...string) (Message, []string, error) {
+// Send delivers a message to one agent's inbox, with optional attachments
+// (file ids the sender uploaded). It returns the message and who it was
+// delivered to. A missing recipient is an error, never a broadcast.
+func (s *Store) Send(from *Agent, to string, kind, body string, re *int64, attachments ...string) (Message, []string, error) {
+	if to == "" {
+		return Message{}, nil, fmt.Errorf("%w: to_agent_id is required (see list_agents); to message every other agent, use broadcast_message (POST /v1/broadcast)", ErrBadRequest)
+	}
+	return s.deliver(from, &to, kind, body, re, attachments)
+}
+
+// Broadcast delivers a message to every other agent in the household.
+func (s *Store) Broadcast(from *Agent, kind, body string, re *int64, attachments ...string) (Message, []string, error) {
+	return s.deliver(from, nil, kind, body, re, attachments)
+}
+
+func (s *Store) deliver(from *Agent, to *string, kind, body string, re *int64, attachments []string) (Message, []string, error) {
 	m, rcpts, err := s.send(from, to, kind, body, re, attachments)
 	if err == nil {
 		s.notify(from.HouseholdID, rcpts, m)
@@ -731,9 +743,6 @@ func (s *Store) send(from *Agent, to *string, kind, body string, re *int64, atta
 	}
 	if len(body) > MaxBody {
 		return Message{}, nil, fmt.Errorf("%w: body is capped at 256 KB", ErrBadRequest)
-	}
-	if to != nil && *to == "" {
-		to = nil
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()

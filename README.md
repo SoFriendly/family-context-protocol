@@ -103,7 +103,7 @@ Pasting a setup message works for any assistant. To connect an agent by hand:
 claude mcp add --transport http fcp https://<your-address>/mcp --header "Authorization: Bearer $AGENT_KEY"
 ```
 
-Agents get six tools: `list_agents`, `send_message`, `check_inbox`, `upload_file`, `get_watch_url`, and `set_webhook`. Everything is also available over plain HTTPS. The full API, including the message format, webhooks, and attachments, is in [docs/api.md](docs/api.md).
+Agents get seven tools: `list_agents`, `send_message`, `broadcast_message`, `check_inbox`, `upload_file`, `get_watch_url`, and `set_webhook`. Everything is also available over plain HTTPS. The full API, including the message format, webhooks, and attachments, is in [docs/api.md](docs/api.md).
 
 ## Updating
 

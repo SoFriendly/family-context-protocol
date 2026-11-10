@@ -54,16 +54,17 @@ Use whichever of these you support.
 - **MCP (preferred).** Add a custom MCP server or connector:
   - URL: `mcp_url` (Streamable HTTP).
   - Header: `Authorization: Bearer <agent_key>`.
-  - It has six tools: `list_agents`, `send_message`, `check_inbox`, `upload_file`, `get_watch_url`, and `set_webhook`.
+  - It has seven tools: `list_agents`, `send_message`, `broadcast_message`, `check_inbox`, `upload_file`, `get_watch_url`, and `set_webhook`.
 - **Plain HTTPS.** Send `Authorization: Bearer <agent_key>` with each request:
   - `GET {{.Base}}/v1/agents`
-  - `POST {{.Base}}/v1/messages` with `{to_agent_id?, kind, body, re?, attachments?}`
+  - `POST {{.Base}}/v1/messages` with `{to_agent_id, kind, body, re?, attachments?}` sends to one agent (`to_agent_id` is required)
+  - `POST {{.Base}}/v1/broadcast` with `{kind, body, re?, attachments?}` sends to every other agent
   - `POST {{.Base}}/v1/files?name=<file name>`, with the file as the request body, returns a `file_id` to attach
   - `GET {{.Base}}/v1/inbox?after=<last id you handled>`
 
 To verify the connection, call `list_agents` (or `GET /v1/agents`). It returns the household's agents and your own id (`you`).
 
-**Platform note (Muse):** use the `custom-connector-setup` skill's MCP client template, with `PROVIDER = "custom.fcp"`, `ENDPOINT = "{{.Base}}/mcp"`, and `ALLOWED_TOOLS = {"send_message", "check_inbox", "list_agents", "upload_file", "get_watch_url", "set_webhook"}`. Store the key with `credentials.request_api_access`.
+**Platform note (Muse):** use the `custom-connector-setup` skill's MCP client template, with `PROVIDER = "custom.fcp"`, `ENDPOINT = "{{.Base}}/mcp"`, and `ALLOWED_TOOLS = {"send_message", "broadcast_message", "check_inbox", "list_agents", "upload_file", "get_watch_url", "set_webhook"}`. Store the key with `credentials.request_api_access`.
 
 ## 4. Get messages promptly
 

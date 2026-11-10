@@ -32,7 +32,7 @@ func setup(t *testing.T) (*Store, string, *Agent, *Agent, *Agent) {
 
 func TestDirectReplyAndDeleteOnRead(t *testing.T) {
 	s, _, a, b, c := setup(t)
-	m, to, err := s.Send(a, &b.ID, "task", "add parking", nil)
+	m, to, err := s.Send(a, b.ID, "task", "add parking", nil)
 	if err != nil || len(to) != 1 || to[0] != b.ID {
 		t.Fatal(err, to)
 	}
@@ -47,7 +47,7 @@ func TestDirectReplyAndDeleteOnRead(t *testing.T) {
 	if len(s.Inbox(b, 0)) != 1 {
 		t.Fatal("message vanished before ack")
 	}
-	s.Send(b, &a.ID, "reply", "Added to trip plan", &m.ID)
+	s.Send(b, a.ID, "reply", "Added to trip plan", &m.ID)
 	if got := s.Inbox(b, m.ID); len(got) != 0 {
 		t.Fatalf("ack did not delete: %v", got)
 	}
@@ -63,23 +63,22 @@ func TestDirectReplyAndDeleteOnRead(t *testing.T) {
 
 func TestBroadcast(t *testing.T) {
 	s, _, a, b, c := setup(t)
-	_, to, _ := s.Send(a, nil, "update", "hi all", nil)
+	_, to, _ := s.Broadcast(a, "update", "hi all", nil)
 	if len(to) != 2 || len(s.Inbox(a, 0)) != 0 || len(s.Inbox(b, 0)) != 1 || len(s.Inbox(c, 0)) != 1 {
 		t.Fatalf("broadcast: %v", to)
 	}
 }
 
 func TestValidation(t *testing.T) {
-	s, _, a, _, _ := setup(t)
-	bad := "nobody"
+	s, _, a, b, _ := setup(t)
 	for _, tc := range []struct {
-		to         *string
-		kind, body string
+		to, kind, body string
 	}{
-		{nil, "gossip", "x"},
-		{nil, "task", "  "},
-		{&bad, "task", "x"},
-		{nil, "task", strings.Repeat("x", MaxBody+1)},
+		{b.ID, "gossip", "x"},
+		{b.ID, "task", "  "},
+		{"nobody", "task", "x"},
+		{"", "task", "x"}, // no recipient is an error, not a broadcast
+		{b.ID, "task", strings.Repeat("x", MaxBody+1)},
 	} {
 		if _, _, err := s.Send(a, tc.to, tc.kind, tc.body, nil); !errors.Is(err, ErrBadRequest) {
 			t.Errorf("%+v: %v", tc, err)
@@ -90,11 +89,11 @@ func TestValidation(t *testing.T) {
 func TestInboxFullAndTTL(t *testing.T) {
 	s, _, a, b, _ := setup(t)
 	for range MaxInbox {
-		if _, _, err := s.Send(a, &b.ID, "notice", "x", nil); err != nil {
+		if _, _, err := s.Send(a, b.ID, "notice", "x", nil); err != nil {
 			t.Fatal(err)
 		}
 	}
-	if _, _, err := s.Send(a, &b.ID, "notice", "x", nil); !errors.Is(err, ErrInboxFull) {
+	if _, _, err := s.Send(a, b.ID, "notice", "x", nil); !errors.Is(err, ErrInboxFull) {
 		t.Fatalf("full: %v", err)
 	}
 	for i := range s.inbox[b.ID] {
@@ -108,7 +107,7 @@ func TestInboxFullAndTTL(t *testing.T) {
 func TestRestartKeepsKeysDropsMessages(t *testing.T) {
 	s, path, a, b, _ := setup(t)
 	_, key, _ := s.MintAgent(a.HouseholdID, "D")
-	m, _, _ := s.Send(a, &b.ID, "task", "x", nil)
+	m, _, _ := s.Send(a, b.ID, "task", "x", nil)
 	fi, _ := os.Stat(path)
 	if fi.Mode().Perm() != 0o600 {
 		t.Fatalf("keys file mode %v", fi.Mode())
@@ -128,7 +127,7 @@ func TestRestartKeepsKeysDropsMessages(t *testing.T) {
 	if got := s2.Inbox(b, 0); len(got) != 0 {
 		t.Fatal("message survived restart")
 	}
-	m2, _, _ := s2.Send(a, &b.ID, "task", "y", nil)
+	m2, _, _ := s2.Send(a, b.ID, "task", "y", nil)
 	if m2.ID <= m.ID {
 		t.Fatalf("ids repeat across restart: %d <= %d", m2.ID, m.ID)
 	}
@@ -145,7 +144,7 @@ func TestRotateRevoke(t *testing.T) {
 	if _, err := s.AgentByKey(newKey); err != nil {
 		t.Fatal("new key fails")
 	}
-	s.Send(a, &b.ID, "notice", "x", nil)
+	s.Send(a, b.ID, "notice", "x", nil)
 	s.DeleteAgent(a.HouseholdID, b.ID)
 	if _, ok := s.inbox[b.ID]; ok {
 		t.Fatal("revoked agent's inbox kept")
@@ -156,7 +155,7 @@ func TestConcurrentIDsUnique(t *testing.T) {
 	s, _, a, b, _ := setup(t)
 	var wg sync.WaitGroup
 	for range 200 {
-		wg.Go(func() { s.Send(a, &b.ID, "notice", "x", nil) })
+		wg.Go(func() { s.Send(a, b.ID, "notice", "x", nil) })
 	}
 	wg.Wait()
 	box := s.Inbox(b, 0)
@@ -314,7 +313,7 @@ func TestSystemMessages(t *testing.T) {
 		t.Fatalf("removal notice: %+v", g)
 	}
 	// Agents can't send system messages.
-	if _, _, err := s.Send(&j, nil, SystemKind, "x", nil); !errors.Is(err, ErrBadRequest) {
+	if _, _, err := s.Broadcast(&j, SystemKind, "x", nil); !errors.Is(err, ErrBadRequest) {
 		t.Fatalf("agent sent system: %v", err)
 	}
 }
@@ -337,11 +336,11 @@ func TestAttachments(t *testing.T) {
 		t.Fatal("upload token reusable")
 	}
 	// Only the uploader can attach it.
-	if _, _, err := s.Send(b, &c.ID, "notice", "x", nil, id); !errors.Is(err, ErrBadRequest) {
+	if _, _, err := s.Send(b, c.ID, "notice", "x", nil, id); !errors.Is(err, ErrBadRequest) {
 		t.Fatalf("someone else's file: %v", err)
 	}
 	// Broadcast: freed only after every recipient acknowledges.
-	m, _, err := s.Send(a, nil, "update", "the plan", nil, id)
+	m, _, err := s.Broadcast(a, "update", "the plan", nil, id)
 	if err != nil || len(m.Attachments) != 1 {
 		t.Fatal(err, m)
 	}

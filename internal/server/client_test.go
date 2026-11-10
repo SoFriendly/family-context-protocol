@@ -38,7 +38,7 @@ func TestStockMCPClient(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]bool{"send_message": true, "check_inbox": true, "list_agents": true, "get_watch_url": true, "set_webhook": true, "upload_file": true}
+	want := map[string]bool{"send_message": true, "broadcast_message": true, "check_inbox": true, "list_agents": true, "get_watch_url": true, "set_webhook": true, "upload_file": true}
 	if len(tools.Tools) != len(want) {
 		t.Fatalf("tools: %d", len(tools.Tools))
 	}

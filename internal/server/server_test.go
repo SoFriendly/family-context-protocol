@@ -114,7 +114,12 @@ func TestCoordinationREST(t *testing.T) {
 		t.Fatalf("agents: %+v", agents)
 	}
 
-	e.do("POST", "/v1/messages", j.Key, map[string]any{"kind": "update", "body": "Booked MCO parking"}, 201, nil) // to everyone
+	// Leaving out the recipient is an error, never a silent broadcast.
+	if m := e.do("POST", "/v1/messages", j.Key, map[string]any{"kind": "update", "body": "Booked MCO parking"}, 400, nil); !strings.Contains(m["hint"].(string), "/v1/broadcast") {
+		t.Fatalf("missing recipient hint: %v", m)
+	}
+	e.do("POST", "/v1/broadcast", j.Key, map[string]any{"to_agent_id": a.ID, "kind": "update", "body": "x"}, 400, nil)
+	e.do("POST", "/v1/broadcast", j.Key, map[string]any{"kind": "update", "body": "Booked MCO parking"}, 201, nil) // to everyone
 	var task struct {
 		ID          int64
 		DeliveredTo []string `json:"delivered_to"`
@@ -208,8 +213,20 @@ func TestCoordinationMCP(t *testing.T) {
 	if len(in.Messages) != 1 || in.Messages[0].Body != "Added to trip plan" {
 		t.Fatalf("reply: %+v", in)
 	}
-	if isErr, text := e.mcp(j.Key, "send_message", map[string]any{"kind": "gossip", "body": "x"}, nil); !isErr || !strings.Contains(text, "kind must be") {
+	if isErr, text := e.mcp(j.Key, "send_message", map[string]any{"to_agent_id": a.ID, "kind": "gossip", "body": "x"}, nil); !isErr || !strings.Contains(text, "kind must be") {
 		t.Fatalf("bad kind: %v %s", isErr, text)
+	}
+	// No recipient is an error; broadcasting is its own tool.
+	for _, args := range []map[string]any{{"kind": "notice", "body": "x"}, {"to_agent_id": "", "kind": "notice", "body": "x"}} {
+		if isErr, text := e.mcp(j.Key, "send_message", args, nil); !isErr {
+			t.Fatalf("send_message without recipient: %s", text)
+		}
+	}
+	var b struct {
+		To []string `json:"delivered_to"`
+	}
+	if isErr, text := e.mcp(j.Key, "broadcast_message", map[string]any{"kind": "notice", "body": "hi all"}, &b); isErr || len(b.To) != 1 || b.To[0] != a.ID {
+		t.Fatalf("broadcast_message: %s %+v", text, b)
 	}
 }
 
@@ -417,7 +434,7 @@ func TestJoinFlow(t *testing.T) {
 		t.Fatal("second agent should not get a partner link")
 	}
 	// They're in the same household and can talk.
-	e.do("POST", "/v1/messages", j2["agent_key"].(string), map[string]any{"kind": "notice", "body": "hi from Alex's Muse"}, 201, nil)
+	e.do("POST", "/v1/broadcast", j2["agent_key"].(string), map[string]any{"kind": "notice", "body": "hi from Alex's Muse"}, 201, nil)
 	if got := e.inbox(j1.Key, 0); len(got) != 1 || got[0].FromName != "Alex's Muse" {
 		t.Fatalf("Jamie's inbox: %+v", got)
 	}

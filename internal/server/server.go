@@ -80,10 +80,11 @@ func New(st *store.Store, cfg Config) http.Handler {
 	mux.HandleFunc("POST /v1/agents", s.any(true, s.mintAgent))
 	mux.HandleFunc("POST /v1/agents/{id}/rotate", s.any(true, s.rotateAgent))
 	mux.HandleFunc("DELETE /v1/agents/{id}", s.any(true, s.deleteAgent))
-	mux.HandleFunc("POST /v1/messages", s.agent(s.send))
+	mux.HandleFunc("POST /v1/messages", s.agent(s.send(false)))
+	mux.HandleFunc("POST /v1/broadcast", s.agent(s.send(true)))
 	mux.HandleFunc("GET /v1/inbox", s.agent(s.inbox))
 	mux.HandleFunc("/v1/", func(w http.ResponseWriter, r *http.Request) {
-		WriteErr(w, 404, "no such endpoint", "endpoints: GET /v1/inbox, POST /v1/messages, GET /v1/agents (see README)")
+		WriteErr(w, 404, "no such endpoint", "endpoints: GET /v1/inbox, POST /v1/messages, POST /v1/broadcast, GET /v1/agents (see /agents.md)")
 	})
 	mux.HandleFunc("POST /v1/files", s.agent(s.uploadDirect))
 	mux.HandleFunc("POST /v1/uploads", s.agent(s.declareUpload))
@@ -365,23 +366,44 @@ func (s *server) deleteAgent(w http.ResponseWriter, r *http.Request, c *caller) 
 	writeJSON(w, 200, map[string]bool{"deleted": true})
 }
 
-func (s *server) send(w http.ResponseWriter, r *http.Request, c *caller) {
-	var in struct {
-		To          *string  `json:"to_agent_id"`
-		Kind        string   `json:"kind"`
-		Body        string   `json:"body"`
-		Re          *int64   `json:"re"`
-		Attachments []string `json:"attachments"`
+// send is POST /v1/messages (one recipient, required) or, with all,
+// POST /v1/broadcast (every other agent, no recipient field).
+func (s *server) send(all bool) handler {
+	return func(w http.ResponseWriter, r *http.Request, c *caller) {
+		var in struct {
+			To          *string  `json:"to_agent_id"`
+			Kind        string   `json:"kind"`
+			Body        string   `json:"body"`
+			Re          *int64   `json:"re"`
+			Attachments []string `json:"attachments"`
+		}
+		if !decode(w, r, &in) {
+			return
+		}
+		var (
+			m   store.Message
+			to  []string
+			err error
+		)
+		switch {
+		case all && in.To != nil:
+			WriteErr(w, 400, "bad request", "a broadcast goes to every other agent; drop to_agent_id, or use POST /v1/messages for one agent")
+			return
+		case all:
+			m, to, err = s.st.Broadcast(c.agent, in.Kind, in.Body, in.Re, in.Attachments...)
+		default:
+			var id string
+			if in.To != nil {
+				id = *in.To
+			}
+			m, to, err = s.st.Send(c.agent, id, in.Kind, in.Body, in.Re, in.Attachments...)
+		}
+		if err != nil {
+			storeErr(w, err)
+			return
+		}
+		writeJSON(w, 201, map[string]any{"id": m.ID, "delivered_to": to, "created_at": m.CreatedAt})
 	}
-	if !decode(w, r, &in) {
-		return
-	}
-	m, to, err := s.st.Send(c.agent, in.To, in.Kind, in.Body, in.Re, in.Attachments...)
-	if err != nil {
-		storeErr(w, err)
-		return
-	}
-	writeJSON(w, 201, map[string]any{"id": m.ID, "delivered_to": to, "created_at": m.CreatedAt})
 }
 
 func (s *server) inbox(w http.ResponseWriter, r *http.Request, c *caller) {
@@ -536,7 +558,7 @@ func (s *server) download(w http.ResponseWriter, r *http.Request) {
 
 // ReleaseNote is what agents are told when a server is updated to this
 // release (once per contract change). Update it with each release.
-const ReleaseNote = "New: messages can carry file attachments, up to 25 MB each. Upload with upload_file, then list the file ids in send_message's attachments. Attachments you receive come with a download_url that needs no key. Also new: you get system messages like this one when FCP changes, or when someone joins or leaves the household."
+const ReleaseNote = "Changed: send_message (POST /v1/messages) now requires to_agent_id; leaving it out is an error instead of sending to everyone. To message every other agent, use the new broadcast_message tool (POST /v1/broadcast). If you use an MCP tool allowlist, add broadcast_message to it."
 
 // AnnounceRelease posts the release note to every household whose agents
 // haven't heard about the current contract yet.

@@ -1,4 +1,4 @@
-// Package mcp serves FCP's three tools over MCP Streamable HTTP.
+// Package mcp serves FCP's tools over MCP Streamable HTTP.
 package mcp
 
 import (
@@ -145,8 +145,14 @@ func limited() (*mcp.CallToolResult, any, error) {
 
 type (
 	sendIn struct {
-		To          string   `json:"to_agent_id,omitempty" jsonschema:"recipient agent id from list_agents; omit to send to every other agent"`
+		To          string   `json:"to_agent_id" jsonschema:"recipient agent id from list_agents (required; use broadcast_message to message every other agent)"`
 		Kind        string   `json:"kind" jsonschema:"update (FYI, something changed), question (expects a reply), task (expects action, then a reply), notice (heads-up), or reply (answers a message: set re)"`
+		Body        string   `json:"body" jsonschema:"the message, markdown, max 256 KB"`
+		Re          *int64   `json:"re,omitempty" jsonschema:"id of the message this replies to"`
+		Attachments []string `json:"attachments,omitempty" jsonschema:"file ids from upload_file to attach (at most 10)"`
+	}
+	broadcastIn struct {
+		Kind        string   `json:"kind" jsonschema:"update, question, task, notice, or reply (set re)"`
 		Body        string   `json:"body" jsonschema:"the message, markdown, max 256 KB"`
 		Re          *int64   `json:"re,omitempty" jsonschema:"id of the message this replies to"`
 		Attachments []string `json:"attachments,omitempty" jsonschema:"file ids from upload_file to attach (at most 10)"`
@@ -170,15 +176,27 @@ func newServer(st *store.Store, a *store.Agent, allow func(write bool) bool, o O
 	contractVersion := o.ContractVersion
 	s := mcp.NewServer(&mcp.Implementation{Name: "fcp", Version: "1"}, &mcp.ServerOptions{
 		SupportedProtocolVersions: versions,
-		Instructions:              "Family Context Protocol: a message bus between a household's agents. check_inbox to receive (pass after=<last id you handled> to delete handled messages); send_message to tell or ask another agent something; reply with kind=reply and re=<message id>. The server keeps nothing after delivery, so remember what you need.",
+		Instructions:              "Family Context Protocol: a message bus between a household's agents. check_inbox to receive (pass after=<last id you handled> to delete handled messages); send_message to tell or ask one agent something (broadcast_message for all of them); reply with kind=reply and re=<message id>. The server keeps nothing after delivery, so remember what you need.",
 	})
 
-	mcp.AddTool(s, &mcp.Tool{Name: "send_message", Description: "Send another agent (or every other agent) a message: an update, question, task, notice, or a reply to one of theirs."},
+	mcp.AddTool(s, &mcp.Tool{Name: "send_message", Description: "Send one other agent a message (to_agent_id is required): an update, question, task, notice, or a reply to one of theirs. To message every other agent at once, use broadcast_message."},
 		func(ctx context.Context, _ *mcp.CallToolRequest, in sendIn) (*mcp.CallToolResult, any, error) {
 			if !allow(true) {
 				return limited()
 			}
-			m, to, err := st.Send(a, &in.To, in.Kind, in.Body, in.Re, in.Attachments...)
+			m, to, err := st.Send(a, in.To, in.Kind, in.Body, in.Re, in.Attachments...)
+			if err != nil {
+				return storeFail(err)
+			}
+			return nil, map[string]any{"id": m.ID, "delivered_to": to, "created_at": m.CreatedAt}, nil
+		})
+
+	mcp.AddTool(s, &mcp.Tool{Name: "broadcast_message", Description: "Send the same message to every other agent in the household. Use it only when the message really is for all of them; otherwise use send_message."},
+		func(ctx context.Context, _ *mcp.CallToolRequest, in broadcastIn) (*mcp.CallToolResult, any, error) {
+			if !allow(true) {
+				return limited()
+			}
+			m, to, err := st.Broadcast(a, in.Kind, in.Body, in.Re, in.Attachments...)
 			if err != nil {
 				return storeFail(err)
 			}
