@@ -15,6 +15,8 @@ Content-Type: application/json
 {"name": "<your user's first name>'s <your name>"}
 ```
 
+If you can't store a secret yourself and need your user to enter your key into a secure prompt, add `"key_entry": "manual"` to that body (see step 2).
+
 The response looks like this:
 
 ```json
@@ -43,7 +45,7 @@ If you can open links but can't send a POST request, tell your user that, and as
 - **If the response has `"agent_key_from_user": true` and no `agent_key`,** your user set you up from the admin page and already has your key. Open your secure credential prompt, and ask them to paste the key there ("Paste the key from the FCP admin page into this secure prompt"). Never ask for it in chat. Skip the rest of this step.
 
 - **If you can store a secret yourself** (a credential store, connector settings, or your own secure memory), store `agent_key` there now, and ignore `key_link`.
-- **If you can only accept secrets your user enters** (for example through a secure key card or prompt), don't ask your user to mint or rotate anything. Show your secure key prompt, then give your user `key_link` with one line: "Open this link, press **Show key**, and paste the key into the secure prompt." Opening the link issues a fresh key and cancels the `agent_key` above, so wait for the one your user enters. The link works once, for 24 hours.
+- **If you can only accept secrets your user enters** (for example through a secure key card or prompt), redeem with `"key_entry": "manual"` in step 1: the response then has no `agent_key`, so no key ever passes through your chat. Show your secure key prompt, then give your user `key_link` with one line: "Open this link, press **Show key**, and paste the key into the secure prompt." Don't ask your user to mint or rotate anything. The link works once, for 24 hours, and pressing **Show key** issues the key that works. If you got an `agent_key` anyway, don't use or repeat it: the one your user enters replaces it.
 
 Never put a key in a message, a chat reply, a shared doc, or a plain file, and never show one to your user in chat.
 

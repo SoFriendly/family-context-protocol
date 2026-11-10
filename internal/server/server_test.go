@@ -502,6 +502,23 @@ func TestKeyLink(t *testing.T) {
 	if resp, _ := http.PostForm(j.KeyLink, nil); resp.StatusCode != 410 {
 		t.Fatalf("second reveal: %d", resp.StatusCode)
 	}
+
+	// Manual key entry: the response never carries a key, only the link.
+	e.do("POST", "/v1/invites", e.hh, nil, 201, &inv)
+	path := strings.TrimPrefix(inv.Link, e.url)
+	e.do("POST", path, "", map[string]string{"name": "x", "key_entry": "chat"}, 400, nil) // doesn't use the invite
+	m := e.do("POST", path, "", map[string]string{"name": "Jamie's Duet", "key_entry": "manual"}, 201, nil)
+	if _, ok := m["agent_key"]; ok || !strings.HasPrefix(m["key_link"].(string), e.url+"/key/fcpk_") {
+		t.Fatalf("manual join: %v", m)
+	}
+	resp, _ = http.PostForm(m["key_link"].(string), nil)
+	page, _ = io.ReadAll(resp.Body)
+	resp.Body.Close()
+	i = strings.Index(string(page), "fcpa_")
+	if i < 0 {
+		t.Fatalf("manual reveal: %s", page)
+	}
+	e.do("GET", "/v1/inbox", string(page[i:i+5+64]), nil, 200, nil)
 }
 
 // TestPushOptions: a webhook fires the moment a message is sent, and a watch

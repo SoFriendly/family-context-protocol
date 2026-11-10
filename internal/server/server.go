@@ -256,9 +256,14 @@ func (s *server) join(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var in struct {
-		Name string `json:"name"`
+		Name     string `json:"name"`
+		KeyEntry string `json:"key_entry"` // "manual": the person enters the key; never return it
 	}
 	if !decode(w, r, &in) {
+		return
+	}
+	if in.KeyEntry != "" && in.KeyEntry != "manual" {
+		WriteErr(w, 400, "bad key_entry", `key_entry is "manual" (your user enters your key from key_link) or omitted`)
 		return
 	}
 	red, err := s.st.Redeem(r.PathValue("token"), in.Name)
@@ -274,7 +279,11 @@ func (s *server) join(w http.ResponseWriter, r *http.Request) {
 	out := map[string]any{"agent_id": a.ID, "name": a.Name, "mcp_url": base + "/mcp", "api_base": base + "/v1",
 		"instructions": base + "/agents.md"}
 	if red.Key != "" {
-		out["agent_key"] = red.Key
+		// With manual key entry the minted key is dropped unseen; revealing
+		// key_link rotates it, so only the person ever sees a working key.
+		if in.KeyEntry == "" {
+			out["agent_key"] = red.Key
+		}
 		out["key_link"] = base + "/key/" + s.st.CreateKeyLink(a.HouseholdID, a.ID)
 	} else {
 		// Set up in /admin: the person already has the key.
