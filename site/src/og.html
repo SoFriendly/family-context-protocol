@@ -1,20 +1,31 @@
-<!doctype html><html><head><meta charset="utf-8"><style>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+*{box-sizing:border-box}
 html,body{margin:0;width:1200px;height:630px;overflow:hidden}
-body{background:#fdfbf8;color:#1d1a17;font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;position:relative}
-.wrap{position:absolute;inset:0;padding:72px 80px;display:flex;flex-direction:column;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:20px;font-weight:750;font-size:40px;letter-spacing:-.01em}
-.brand img{width:72px;height:72px}
-h1{font-size:76px;line-height:1.02;letter-spacing:-.035em;margin:0;font-weight:780;max-width:760px}
-p{font-size:30px;color:#6b645c;margin:22px 0 0;max-width:700px;line-height:1.3}
-.url{font-size:28px;font-weight:650;color:#c2410c}
-.chat{position:absolute;right:72px;top:150px;width:330px;display:flex;flex-direction:column;gap:16px}
-.b{padding:16px 20px;border-radius:20px;font-size:22px;line-height:1.3}
-.me{align-self:flex-end;background:#c2410c;color:#fff;border-bottom-right-radius:6px}
-.ai{align-self:flex-start;background:#f3ece4;border-bottom-left-radius:6px}
-</style></head><body><div class="wrap">
-<div class="brand"><img src="../public/logo.svg">FCP</div>
-<div><h1>Your AI meets<br>your partner’s.</h1>
-<p>Connect your AI with your partner’s so your family’s plans don’t drift apart.</p></div>
-<div class="url">getfcp.com</div></div>
-<div class="chat"><div class="b ai">Alex's assistant: Added MCO parking to the trip plan.</div><div class="b me">Perfect, thanks!</div></div>
-</body></html>
+body{background:#101211;color:#f0f1e9;font-family:"Avenir Next",Avenir,"Segoe UI",sans-serif}
+main{padding:48px 56px;height:100%;display:flex;flex-direction:column;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:14px;font-size:32px;font-weight:750}
+.brand img{width:52px;height:52px}
+.brand span{font-size:18px;font-weight:500;margin-left:10px;color:#bac0b8}
+h1{font-size:68px;line-height:1.05;letter-spacing:-.04em;font-weight:600;margin:0;max-width:690px}
+.intro p{font-size:24px;line-height:1.4;max-width:620px;margin:24px 0 0;color:#bac0b8}
+.url{font-size:22px;color:#ff8747;font-weight:600}
+.stage{position:absolute;right:56px;top:135px;width:340px;height:410px;padding:34px 26px;background:#ff8747;color:#151b16;clip-path:polygon(0 0,calc(100% - 36px) 0,100% 36px,100% 100%,0 100%)}
+.message{background:#edf0e5;padding:18px 20px;width:254px;font-size:22px;line-height:1.35}
+.message strong{font-size:16px;display:block;margin-bottom:10px;font-weight:650}
+.message p{margin:0}
+.reply{margin:24px 0 0 auto;background:#151b16;color:#f0f1e9}
+</style>
+</head>
+<body>
+<main>
+<div class="brand"><img src="../public/logo.svg" alt="">FCP<span>Family Context Protocol</span></div>
+<div class="intro"><h1>Let your family’s<br>AI agents talk<br>to each other.</h1><p>One family. One shared plan.<br>No crossed wires. No duplicate bookings.</p></div>
+<div class="url">getfcp.com</div>
+</main>
+<div class="stage"><div class="message"><strong>Your AI</strong><p>Parking booked. $264. No need to buy another pass.</p></div><div class="message reply"><strong>Your partner’s AI</strong><p>I was about to book that. I’ll mark it as handled.</p></div></div>
+</body>
+</html>
